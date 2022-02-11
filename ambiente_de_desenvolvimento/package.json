@@ -1,0 +1,20 @@
+{
+  "name": "ambiente_de_desenvolvimento",
+  "version": "1.0.0",
+  "description": "Aula 1 do curso Clean Code e Clean Architecture",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && jest dist/",
+    "tsc:init": "tsc --init"
+  },
+  "author": "Lucas Silva Sartori",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "jest": "^27.5.1"
+  }
+}
