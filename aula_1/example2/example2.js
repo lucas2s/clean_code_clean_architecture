@@ -5,7 +5,7 @@ const returnOnlyNumbers = function (cpf) {
     return cpf.replace(REGEX_ONLY_NUMBERS, '');
 }
 
-const isSizeOfCharacters = function (cpf) {
+const isLengthCpf = function (cpf) {
     return cpf.length === SIZE_LENGTH_CPF;
 }
 
@@ -35,7 +35,7 @@ const calcDigitoVerificadorCpf = function (cpf) {
 const validateCPF = function (cpf) {
     if (!cpf) { return false; }
     cpf = returnOnlyNumbers(cpf);
-    if (!isSizeOfCharacters(cpf)) { return false; }
+    if (!isLengthCpf(cpf)) { return false; }
     if (isEveryNumbersEquals(cpf)) { return false; }
     const digitoVerificadorCpf = cpf.slice(-2);
     const cpfSemDigitoVerificador = cpf.slice(0, cpf.length - 2);
