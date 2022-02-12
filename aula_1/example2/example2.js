@@ -32,7 +32,7 @@ const calcDigitoVerificadorCpf = function (cpf) {
     return `${digito1}${digito2}`;
 }
 
-exports.validateCPF = function (cpf) {
+const validateCPF = function (cpf) {
     if (!cpf) { return false; }
     cpf = returnOnlyNumbers(cpf);
     if (!isSizeOfCharacters(cpf)) { return false; }
@@ -44,4 +44,8 @@ exports.validateCPF = function (cpf) {
         return true;
     }
     return false;
+}
+
+module.exports = {
+    validateCPF
 }

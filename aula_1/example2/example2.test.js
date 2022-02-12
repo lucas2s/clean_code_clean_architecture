@@ -15,7 +15,12 @@ test("Verificar se CPF é branco", function () {
 	expect(isValid).toBeFalsy();
 });
 
-test("Verificar se CPF possui a quantidade correta de números", function () {
+test("Verificar se CPF maior que 11 números", function () {
+	const isValid = example2.validateCPF('4595.411.347-80');
+	expect(isValid).toBeFalsy();
+});
+
+test("Verificar se CPF menor que 11 números", function () {
 	const isValid = example2.validateCPF('95.411.347-80');
 	expect(isValid).toBeFalsy();
 });
