@@ -1,7 +1,23 @@
 const SIZE_LENGTH_CPF = 11;
-const REGEX_ONLY_NUMBERS = /\D/g;
+const REGEX_ONLY_NUMBERS = /[\.\-]*/g;
 
-const returnOnlyNumbers = function (cpf) {
+const validateCpf = function (rawCpf) {
+    if (!rawCpf) {
+        return false;
+    }
+    const cpf = onlyNumbers(rawCpf);
+    if (!isLengthCpf(cpf)) {
+        return false;
+    }
+    if (isBlocked(cpf)) {
+        return false;
+    }
+    const actualCheckDigit = cpf.slice(9);
+    const calculatedCheckDigit = calculateCheckDigitCpf(cpf);
+    return actualCheckDigit === calculatedCheckDigit;
+}
+
+const onlyNumbers = function (cpf) {
     return cpf.replace(REGEX_ONLY_NUMBERS, '');
 }
 
@@ -9,43 +25,28 @@ const isLengthCpf = function (cpf) {
     return cpf.length === SIZE_LENGTH_CPF;
 }
 
-const isEveryNumbersEquals = function (cpf) {
-    return cpf.split("").every(c => c === cpf[0]);
+const isBlocked = function (cpf) {
+    const [firstDigit] = cpf;
+    return cpf.split("").every(digit => digit === firstDigit);
 }
 
-const calcDigito = function (numbers) {
-    let resultaCalc = 0;
-    for (let count = 0, multiplicador = 2; count < numbers.length; count++, multiplicador++) {
-        resultaCalc += Number.parseInt(numbers[count]) * multiplicador;
-    }
-    if ((resultaCalc % SIZE_LENGTH_CPF) < 2) {
-        return 0;
-    }
-    return (SIZE_LENGTH_CPF - (resultaCalc % SIZE_LENGTH_CPF));
-}
-
-const calcDigitoVerificadorCpf = function (cpf) {
-    let numbersCpf = cpf.split('').reverse();
-    const digito1 = calcDigito(numbersCpf);
-    numbersCpf.unshift(digito1);
-    const digito2 = calcDigito(numbersCpf);
+const calculateCheckDigitCpf = function (cpf) {
+    let reverseCpf = cpf.slice(0, 9).split('').reverse();
+    const digito1 = calculatedDigit(reverseCpf);
+    reverseCpf.unshift(digito1);
+    const digito2 = calculatedDigit(reverseCpf);
     return `${digito1}${digito2}`;
 }
 
-const validateCPF = function (cpf) {
-    if (!cpf) { return false; }
-    cpf = returnOnlyNumbers(cpf);
-    if (!isLengthCpf(cpf)) { return false; }
-    if (isEveryNumbersEquals(cpf)) { return false; }
-    const digitoVerificadorCpf = cpf.slice(-2);
-    const cpfSemDigitoVerificador = cpf.slice(0, cpf.length - 2);
-    const digitoVerificador = calcDigitoVerificadorCpf(cpfSemDigitoVerificador);
-    if (digitoVerificador === digitoVerificadorCpf) {
-        return true;
+const calculatedDigit = function (numbers) {
+    let resultDigit = 0;
+    for (let count = 0, multiplicador = 2; count < numbers.length; count++, multiplicador++) {
+        resultDigit += Number.parseInt(numbers[count]) * multiplicador;
     }
-    return false;
+    const rest = resultDigit % SIZE_LENGTH_CPF;
+    return (rest < 2) ? 0 : SIZE_LENGTH_CPF - rest;
 }
 
 module.exports = {
-    validateCPF
+    validateCpf
 }
