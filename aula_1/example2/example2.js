@@ -1,11 +1,8 @@
-const SIZE_LENGTH_CPF = 11;
-const REGEX_ONLY_NUMBERS = /[\.\-]*/g;
-
 const validateCpf = function (rawCpf) {
     if (!rawCpf) {
         return false;
     }
-    const cpf = onlyNumbers(rawCpf);
+    const cpf = removeMask(rawCpf);
     if (!isLengthCpf(cpf)) {
         return false;
     }
@@ -17,12 +14,12 @@ const validateCpf = function (rawCpf) {
     return actualCheckDigit === calculatedCheckDigit;
 }
 
-const onlyNumbers = function (cpf) {
-    return cpf.replace(REGEX_ONLY_NUMBERS, '');
+const removeMask = function (cpf) {
+    return cpf.replace(/[\.\-]*/g, '');
 }
 
 const isLengthCpf = function (cpf) {
-    return cpf.length === SIZE_LENGTH_CPF;
+    return cpf.length === 11;
 }
 
 const isBlocked = function (cpf) {
@@ -38,13 +35,15 @@ const calculateCheckDigitCpf = function (cpf) {
     return `${digito1}${digito2}`;
 }
 
-const calculatedDigit = function (numbers) {
-    let resultDigit = 0;
-    for (let count = 0, multiplicador = 2; count < numbers.length; count++, multiplicador++) {
-        resultDigit += Number.parseInt(numbers[count]) * multiplicador;
+const calculatedDigit = function (cpf) {
+    let totalDigit = 0;
+    let multiplicador = 2;
+    for (const digit of cpf) {
+        totalDigit += Number.parseInt(digit) * multiplicador;
+        multiplicador++;
     }
-    const rest = resultDigit % SIZE_LENGTH_CPF;
-    return (rest < 2) ? 0 : SIZE_LENGTH_CPF - rest;
+    const rest = totalDigit % 11;
+    return (rest < 2) ? 0 : 11 - rest;
 }
 
 module.exports = {
